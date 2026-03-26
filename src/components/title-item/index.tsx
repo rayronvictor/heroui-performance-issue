@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react'
-import { PressableFeedback, cn } from 'heroui-native'
+import { PressableFeedback, cn, MenuRootProps } from 'heroui-native'
 import { View } from 'react-native'
 import { Image } from 'expo-image'
 import { withUniwind } from 'uniwind'
@@ -154,7 +154,11 @@ const TitleItemProgress = ({
   )
 }
 
-const TitleItemMenu = () => {
+type TitleItemMenuType = {
+  presentation?: MenuRootProps['presentation']
+}
+
+const TitleItemMenu = ({ presentation }: TitleItemMenuType) => {
   const { id, name, description, isOpen, setIsOpen } = useTitleItem()
 
   return (
@@ -164,6 +168,7 @@ const TitleItemMenu = () => {
       id={id}
       title={name}
       description={description}
+      presentation={presentation}
     />
   )
 }

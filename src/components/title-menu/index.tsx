@@ -1,16 +1,18 @@
 import { View } from 'react-native'
 
 import { MaterialIcons } from '@expo/vector-icons'
-import { Menu, MenuRootProps, Separator } from 'heroui-native'
+import { Button, cn, Menu, MenuRootProps, Separator } from 'heroui-native'
 import { MenuBlurOverlay } from '@/components/overlay/menu-blur-overlay'
 import { AppText } from '@/components/ui/app-text'
 import { Synopsis } from '@/components/synopsis'
 import { withUniwind } from 'uniwind'
+import React from 'react'
 
 type TitleMenuProps = Omit<MenuRootProps, 'id'> & {
   id: number
   title: string
   description?: string
+  className?: string
 }
 
 const StyleMaterialIcons = withUniwind(MaterialIcons)
@@ -19,13 +21,31 @@ export function TitleMenu({
   id,
   title,
   description,
+  className,
+  presentation,
   ...restProps
 }: TitleMenuProps) {
   return (
-    <Menu presentation="bottom-sheet" {...restProps}>
+    <Menu
+      className={cn('absolute top-0 right-0', className)}
+      {...restProps}
+      presentation={presentation}
+    >
+      <Menu.Trigger asChild>
+        <Button size="sm" variant="ghost" isIconOnly>
+          <StyleMaterialIcons
+            name="more-vert"
+            size={20}
+            colorClassName="accent-foreground"
+          />
+        </Button>
+      </Menu.Trigger>
       <Menu.Portal disableFullWindowOverlay>
         <MenuBlurOverlay />
-        <Menu.Content presentation="bottom-sheet" handleComponent={null}>
+        <Menu.Content
+          presentation={presentation ?? 'popover'}
+          handleComponent={null}
+        >
           <View className="w-full flex-row items-center justify-between pb-3 px-2">
             <AppText className="text-xl font-bold shrink line-clamp-1">
               {title}
