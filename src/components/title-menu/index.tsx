@@ -7,29 +7,31 @@ import { AppText } from '@/components/ui/app-text'
 import { Synopsis } from '@/components/synopsis'
 import { withUniwind } from 'uniwind'
 import React from 'react'
+import { useTitleMenu } from '@/components/title-menu/provider'
 
-type TitleMenuProps = Omit<MenuRootProps, 'id'> & {
-  id: number
-  title: string
-  description?: string
+type TitleMenuProps = {
   className?: string
+  presentation?: MenuRootProps['presentation']
 }
 
 const StyleMaterialIcons = withUniwind(MaterialIcons)
 
-export function TitleMenu({
-  id,
-  title,
-  description,
-  className,
-  presentation,
-  ...restProps
-}: TitleMenuProps) {
+export function TitleMenu({ className, presentation }: TitleMenuProps) {
+  const { activeItem, isOpen, setIsOpen, close } = useTitleMenu()
+
+  const handlePress = (text: string) => {
+    alert(text)
+    close()
+  }
+
   return (
     <Menu
       className={cn('absolute top-0 right-0', className)}
-      {...restProps}
       presentation={presentation}
+      isOpen={isOpen}
+      onOpenChange={(open) => {
+        setIsOpen(open)
+      }}
     >
       <Menu.Trigger asChild>
         <Button size="sm" variant="ghost" isIconOnly>
@@ -48,14 +50,19 @@ export function TitleMenu({
         >
           <View className="w-full flex-row items-center justify-between pb-3 px-2">
             <AppText className="text-xl font-bold shrink line-clamp-1">
-              {title}
+              {activeItem?.title}
             </AppText>
             <Menu.Close />
           </View>
-          {description && <Synopsis synopsis={description} />}
+          {activeItem?.description && (
+            <Synopsis synopsis={activeItem?.description} />
+          )}
           <Separator className="my-2 -mx-5" />
           <View className="gap-2">
-            <Menu.Item className="items-start" onPress={() => alert('play')}>
+            <Menu.Item
+              className="items-start"
+              onPress={() => handlePress('play')}
+            >
               <View className="mt-1">
                 <StyleMaterialIcons
                   name="play-arrow"
@@ -69,7 +76,7 @@ export function TitleMenu({
             </Menu.Item>
             <Menu.Item
               className="items-start"
-              onPress={() => alert('Play the trailer')}
+              onPress={() => handlePress('Play the trailer')}
             >
               <View className="mt-1">
                 <StyleMaterialIcons
@@ -84,7 +91,7 @@ export function TitleMenu({
             </Menu.Item>
             <Menu.Item
               className="items-start"
-              onPress={() => alert('more info')}
+              onPress={() => handlePress('more info')}
             >
               <View className="mt-1">
                 <StyleMaterialIcons
@@ -97,7 +104,10 @@ export function TitleMenu({
                 <Menu.ItemTitle>More info</Menu.ItemTitle>
               </View>
             </Menu.Item>
-            <Menu.Item className="items-start" onPress={() => alert('share')}>
+            <Menu.Item
+              className="items-start"
+              onPress={() => handlePress('share')}
+            >
               <View className="mt-1">
                 <StyleMaterialIcons
                   name="share"

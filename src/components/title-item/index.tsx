@@ -3,8 +3,8 @@ import { PressableFeedback, cn, MenuRootProps } from 'heroui-native'
 import { View } from 'react-native'
 import { Image } from 'expo-image'
 import { withUniwind } from 'uniwind'
-import { TitleMenu } from '@/components/title-menu'
 import { AppText } from '@/components/ui/app-text'
+import { useTitleMenu } from '@/components/title-menu/provider'
 
 const StyledImage = withUniwind(Image)
 
@@ -32,8 +32,6 @@ type TitleItemContextType = {
   aspectRatio: number
   height: number
   width: number
-  isOpen: boolean
-  setIsOpen: (value: boolean) => void
 }
 
 const TitleItemContext = createContext<TitleItemContextType | null>(null)
@@ -60,10 +58,14 @@ const TitleItem = ({
   width = 144,
   isDisabled,
 }: TitleItemProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const { open } = useTitleMenu()
 
   const handleLongPress = () => {
-    setIsOpen(true)
+    open({
+      id,
+      title: name,
+      description,
+    })
     onLongPress?.()
   }
 
@@ -77,8 +79,6 @@ const TitleItem = ({
         aspectRatio,
         height,
         width,
-        isOpen,
-        setIsOpen,
       }}
     >
       <PressableFeedback
@@ -154,27 +154,7 @@ const TitleItemProgress = ({
   )
 }
 
-type TitleItemMenuType = {
-  presentation?: MenuRootProps['presentation']
-}
-
-const TitleItemMenu = ({ presentation }: TitleItemMenuType) => {
-  const { id, name, description, isOpen, setIsOpen } = useTitleItem()
-
-  return (
-    <TitleMenu
-      isOpen={isOpen}
-      onOpenChange={(open) => setIsOpen(open)}
-      id={id}
-      title={name}
-      description={description}
-      presentation={presentation}
-    />
-  )
-}
-
 TitleItem.Image = TitleItemImage
 TitleItem.Progress = TitleItemProgress
-TitleItem.Menu = TitleItemMenu
 
 export default TitleItem

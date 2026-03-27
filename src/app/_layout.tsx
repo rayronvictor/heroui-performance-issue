@@ -5,6 +5,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { HeroUINativeProviderRaw } from 'heroui-native/provider-raw'
 import { ToastProvider } from 'heroui-native/toast'
 import '../global.css'
+import { TitleMenuProvider } from '@/components/title-menu/provider'
+import { TitleMenu } from '@/components/title-menu'
 
 export { ErrorBoundary } from 'expo-router'
 
@@ -14,7 +16,10 @@ function RootLayout() {
       <HeroUINativeProviderRaw>
         <StatusBar barStyle="light-content" />
         <ToastProvider>
-          <RootNavigator />
+          <TitleMenuProvider>
+            <RootNavigator />
+            <TitleMenu presentation="bottom-sheet" />
+          </TitleMenuProvider>
         </ToastProvider>
       </HeroUINativeProviderRaw>
     </GestureHandlerRootView>

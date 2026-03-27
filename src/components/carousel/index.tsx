@@ -42,7 +42,6 @@ export function Carousel({ title, data = [] }: CarouselType) {
         >
           <TitleItem.Image />
           <TitleItem.Progress value={item.progress} />
-          <TitleItem.Menu />
         </TitleItem>
       </View>
     )
